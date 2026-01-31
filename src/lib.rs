@@ -76,7 +76,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_example_1(){
+    fn test_correct_solution() {
         // the public input prover and verifier agree on including modulus:
         let alpha = BigUint::from(4u32);
         let beta = BigUint::from(9u32);
@@ -108,6 +108,41 @@ mod tests {
 
 
         let result = verify_solution(&r1, &r2, &alpha, &beta, &y1, &y2, &c, &s, &p);
-        assert!(result);      
+
+        print!("result {}", &result);
+        assert!(result);
+    }
+
+    #[test]
+    fn test_incorrect_solution() {
+        // the public input prover and verifier agree on including modulus:
+        let alpha = BigUint::from(4u32);
+        let beta = BigUint::from(9u32);
+        let p = BigUint::from(23u32);
+        let q = BigUint::from(11u32);
+
+        // the secret number x from prover
+        let x = BigUint::from(2u32);
+        // the prover chooses a random number k:
+        let k = BigUint::from(7u32);
+
+        // the verifier chooses a random number c:
+        let c = BigUint::from(4u32);
+
+
+        let y1 = exponential_function(&alpha, &x, &p);
+        let y2 = exponential_function(&beta, &x, &p);
+
+        let r1 = exponential_function(&alpha, &k, &p);
+        let r2 = exponential_function(&beta, &k, &p);
+
+        // provide a diff secret value during the challenge solve phase
+        let x_incorrect = BigUint::from(1u32);
+
+        let s_incorrect = solve_challenge(&k, &c, &x_incorrect, &q);
+
+        let result = verify_solution(&r1, &r2, &alpha, &beta, &y1, &y2, &c, &s_incorrect, &p);
+        print!("result {}", &result);
+        assert!(!result);
     }
 }
