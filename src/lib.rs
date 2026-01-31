@@ -83,7 +83,7 @@ mod tests {
         let p = BigUint::from(23u32);
         let q = BigUint::from(11u32);
 
-        // the secret number x:
+        // the secret number x from prover
         let x = BigUint::from(6u32);
         // the prover chooses a random number k:
         let k = BigUint::from(7u32);
