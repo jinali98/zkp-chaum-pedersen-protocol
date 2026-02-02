@@ -1,5 +1,5 @@
-use num_bigint::BigUint;
-
+use num_bigint::{BigUint, RandBigInt};
+use rand;
 /*
 
 @param n: the number that the function will exponentiate
@@ -71,6 +71,14 @@ pub fn verify_solution(r1: &BigUint, r2: &BigUint, alpha: &BigUint, beta: &BigUi
 }
 
 
+
+pub fn generate_random_number(max_limit: &BigUint) -> BigUint {
+   let mut rng = rand::thread_rng();
+   rng.gen_biguint_below(max_limit)
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -86,10 +94,10 @@ mod tests {
         // the secret number x from prover
         let x = BigUint::from(6u32);
         // the prover chooses a random number k:
-        let k = BigUint::from(7u32);
+        let k = generate_random_number(&p);
 
         // the verifier chooses a random number c:
-        let c = BigUint::from(4u32);
+        let c = generate_random_number(&q);
 
 
         let y1 = exponential_function(&alpha, &x, &p);
@@ -100,11 +108,11 @@ mod tests {
 
         let r1 = exponential_function(&alpha, &k, &p);
         let r2 = exponential_function(&beta, &k, &p);
-        assert_eq!(r1, BigUint::from(8u32));
-        assert_eq!(r2, BigUint::from(4u32));
+        // assert_eq!(r1, BigUint::from(8u32));
+        // assert_eq!(r2, BigUint::from(4u32));
 
         let s = solve_challenge(&k, &c, &x, &q);
-        assert_eq!(s, BigUint::from(5u32));
+        // assert_eq!(s, BigUint::from(5u32));
 
 
         let result = verify_solution(&r1, &r2, &alpha, &beta, &y1, &y2, &c, &s, &p);
